@@ -403,21 +403,27 @@ onUnmounted(() => {
 <template>
     <Head title="Voter Dashboard" />
 
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-[#0a0a0f] relative">
+        <!-- Subtle animated background -->
+        <div class="fixed inset-0 pointer-events-none">
+            <div class="absolute inset-0 opacity-[0.02]" style="background-image: linear-gradient(rgba(6, 182, 212, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.3) 1px, transparent 1px); background-size: 60px 60px;"></div>
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse-glow"></div>
+            <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl animate-pulse-glow" style="animation-delay: 1.5s;"></div>
+        </div>
+
         <!-- Navigation -->
-        <nav class="bg-white border-b border-gray-100">
+        <nav class="relative z-10 border-b border-gray-800 bg-gray-900/80 backdrop-blur-xl">
+            <div class="h-[2px] bg-gradient-to-r from-cyan-500 via-violet-500 to-cyan-500"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <div class="shrink-0 flex items-center">
-                            <span class="font-bold text-xl text-indigo-600">JUNED E-Voting</span>
-                        </div>
+                        <span class="font-bold text-xl text-gradient">JUNED E-Voting</span>
                     </div>
-                    <div class="flex items-center">
-                        <span v-if="page.props.voter" class="text-sm text-gray-600 mr-4">
+                    <div class="flex items-center gap-4">
+                        <span v-if="page.props.voter" class="text-sm text-gray-400 font-mono">
                             {{ page.props.voter.nik }}
                         </span>
-                        <Link :href="route('voter.logout')" method="post" as="button" class="text-sm text-gray-500 hover:text-gray-700">
+                        <Link :href="route('voter.logout')" method="post" as="button" class="text-sm text-gray-500 hover:text-rose-400 transition-colors">
                             Log Out
                         </Link>
                     </div>
@@ -426,32 +432,32 @@ onUnmounted(() => {
         </nav>
 
         <!-- Main Content -->
-        <main>
+        <main class="relative z-10">
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <!-- Page Header -->
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold text-gray-900">Voting Booth</h1>
-                        <p class="mt-1 text-sm text-gray-600">Select a candidate and cast your vote securely.</p>
+                    <div class="mb-8 px-4 sm:px-0">
+                        <h1 class="text-2xl font-bold text-white">Voting Booth</h1>
+                        <p class="mt-1 text-sm text-gray-500">Select a candidate and cast your vote securely using zero-knowledge proofs.</p>
                     </div>
 
                     <!-- Loading State -->
-                    <div v-if="loadingElections" class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-center">
+                    <div v-if="loadingElections" class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl">
+                        <div class="p-8 text-center">
                             <div class="inline-flex items-center">
-                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span class="text-gray-600">Loading elections...</span>
+                                <span class="text-gray-400">Loading elections...</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Error State -->
-                    <div v-else-if="electionsError" class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-center">
-                            <p class="text-red-600 mb-4">{{ electionsError }}</p>
+                    <div v-else-if="electionsError" class="bg-gray-900/60 backdrop-blur-xl border border-rose-500/30 rounded-2xl shadow-2xl glow-rose">
+                        <div class="p-8 text-center">
+                            <p class="text-rose-400 mb-4">{{ electionsError }}</p>
                             <PrimaryButton @click="fetchElections">
                                 Retry
                             </PrimaryButton>
@@ -459,9 +465,9 @@ onUnmounted(() => {
                     </div>
 
                     <!-- No Elections -->
-                    <div v-else-if="elections.length === 0" class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-center">
-                            <p class="text-gray-600">No active elections at this time.</p>
+                    <div v-else-if="elections.length === 0" class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl">
+                        <div class="p-8 text-center">
+                            <p class="text-gray-500">No active elections at this time.</p>
                         </div>
                     </div>
 
@@ -470,20 +476,20 @@ onUnmounted(() => {
                         <div
                             v-for="election in elections"
                             :key="election.id"
-                            class="bg-white overflow-hidden shadow-sm sm:rounded-lg"
+                            class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl overflow-hidden"
                         >
                             <!-- Election Header -->
-                            <div class="p-6 border-b border-gray-200">
+                            <div class="p-6 border-b border-gray-700/50">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h2 class="text-lg font-semibold text-gray-900">{{ election.name }}</h2>
+                                        <h2 class="text-lg font-semibold text-white">{{ election.name }}</h2>
                                         <p v-if="election.description" class="mt-1 text-sm text-gray-500">{{ election.description }}</p>
                                     </div>
                                     <span
-                                        class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium"
+                                        class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border"
                                         :class="{
-                                            'bg-green-100 text-green-800': election.status === 'BERJALAN',
-                                            'bg-gray-100 text-gray-800': election.status !== 'BERJALAN'
+                                            'bg-emerald-500/10 text-emerald-400 border-emerald-500/30': election.status === 'BERJALAN',
+                                            'bg-gray-500/10 text-gray-400 border-gray-500/30': election.status !== 'BERJALAN'
                                         }"
                                     >
                                         {{ election.status }}
@@ -493,9 +499,9 @@ onUnmounted(() => {
 
                             <!-- Candidates -->
                             <div class="p-6">
-                                <h3 class="text-sm font-medium text-gray-700 mb-4">Candidates</h3>
+                                <h3 class="text-sm font-medium text-gray-400 mb-4">Candidates</h3>
 
-                                <div v-if="!election.kandidats || election.kandidats.length === 0" class="text-sm text-gray-500">
+                                <div v-if="!election.kandidats || election.kandidats.length === 0" class="text-sm text-gray-600">
                                     No candidates registered for this election.
                                 </div>
 
@@ -503,14 +509,14 @@ onUnmounted(() => {
                                     <div
                                         v-for="kandidat in [...election.kandidats].sort((a, b) => a.nomor_urut - b.nomor_urut)"
                                         :key="kandidat.id"
-                                        class="border border-gray-200 rounded-lg p-4 flex flex-col justify-between"
+                                        class="border border-gray-700/50 rounded-xl p-4 flex flex-col justify-between bg-gray-800/30 hover:border-cyan-500/40 transition-all duration-300 group"
                                     >
                                         <div>
-                                            <div class="flex items-center gap-2 mb-2">
-                                                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-sm font-bold">
+                                            <div class="flex items-center gap-3 mb-2">
+                                                <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-400 text-sm font-bold border border-cyan-500/20">
                                                     {{ kandidat.nomor_urut }}
                                                 </span>
-                                                <span class="text-sm font-medium text-gray-900">#{{ kandidat.nomor_urut }} - {{kandidat.nama_kandidat}}</span>
+                                                <span class="text-sm font-medium text-white">#{{ kandidat.nomor_urut }} - {{ kandidat.nama_kandidat }}</span>
                                             </div>
                                             <p v-if="kandidat.visi_misi" class="text-xs text-gray-500 mb-3">{{ kandidat.visi_misi }}</p>
                                         </div>
@@ -519,7 +525,7 @@ onUnmounted(() => {
                                             @click="openVotingModal(election, kandidat)"
                                             :disabled="election.status !== 'BERJALAN'"
                                             class="w-full justify-center mt-2"
-                                            :class="{ 'opacity-50 cursor-not-allowed': election.status !== 'BERJALAN' }"
+                                            :class="{ 'opacity-30 cursor-not-allowed': election.status !== 'BERJALAN' }"
                                         >
                                             Vote
                                         </PrimaryButton>
@@ -537,49 +543,51 @@ onUnmounted(() => {
             <div class="p-6">
                 <!-- Modal Header -->
                 <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900">Cast Your Vote</h3>
-                    <p class="mt-1 text-sm text-gray-600">
-                        Voting for <strong>Candidate #{{ selectedKandidat?.nomor_urut }}</strong>
-                        in <strong>{{ selectedElection?.name }}</strong>
+                    <h3 class="text-lg font-semibold text-white">Cast Your Vote</h3>
+                    <p class="mt-1 text-sm text-gray-400">
+                        Voting for <span class="text-cyan-400 font-medium">Candidate #{{ selectedKandidat?.nomor_urut }}</span>
+                        in <span class="text-white font-medium">{{ selectedElection?.name }}</span>
                     </p>
                 </div>
 
                 <!-- Success State -->
-                <div v-if="voteSuccess" class="text-center py-4">
-                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <div v-if="voteSuccess" class="text-center py-6">
+                    <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-4 glow-emerald">
+                        <svg class="h-7 w-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                         </svg>
                     </div>
-                    <p class="text-sm text-green-700 font-medium">Vote recorded successfully!</p>
+                    <p class="text-sm text-emerald-400 font-medium">Vote recorded successfully!</p>
                     <p class="text-xs text-gray-500 mt-1">Your vote has been submitted anonymously.</p>
-                    <SecondaryButton @click="closeVotingModal" class="mt-4">
+                    <SecondaryButton @click="closeVotingModal" class="mt-6">
                         Close
                     </SecondaryButton>
                 </div>
 
                 <!-- Generating Proof State -->
-                <div v-else-if="isGeneratingProof" class="text-center py-8">
-                    <svg class="animate-spin mx-auto h-10 w-10 text-indigo-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="text-sm text-gray-700 font-medium">Generating zero-knowledge proof...</p>
-                    <p class="text-xs text-gray-500 mt-1">This may take a few moments. Please do not close this window.</p>
+                <div v-else-if="isGeneratingProof" class="text-center py-10">
+                    <div class="relative mx-auto w-16 h-16 mb-6">
+                        <div class="absolute inset-0 rounded-full border-2 border-cyan-500/20"></div>
+                        <div class="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-400 animate-spin"></div>
+                        <div class="absolute inset-2 rounded-full border-2 border-transparent border-t-violet-400 animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                        <div class="absolute inset-0 rounded-full glow-cyan animate-pulse"></div>
+                    </div>
+                    <p class="text-sm text-white font-medium">Generating zero-knowledge proof...</p>
+                    <p class="text-xs text-gray-500 mt-2">This may take a few moments. Please do not close this window.</p>
                 </div>
 
                 <!-- Private Key Input Form -->
                 <div v-else>
                     <!-- Error Display -->
-                    <div v-if="voteError" class="mb-4 rounded-md bg-red-50 p-4">
+                    <div v-if="voteError" class="mb-4 rounded-xl bg-rose-500/10 border border-rose-500/30 p-4 glow-rose">
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <svg class="h-5 w-5 text-rose-400" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm text-red-700">{{ voteError }}</p>
+                                <p class="text-sm text-rose-400">{{ voteError }}</p>
                             </div>
                         </div>
                     </div>

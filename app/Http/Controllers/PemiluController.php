@@ -37,6 +37,53 @@ class PemiluController extends Controller
 
         $turnoutPercentage = $voterCount > 0 ? round(($totalVotes / $voterCount) * 100, 1) : 0;
 
+        // --- Vote Tally: count verified votes per candidate from public_signals ---
+        $verifiedVotes = Suara::where('pemilu_id', $pemilu->id)
+            ->where('status', 'TERVERIFIKASI')
+            ->with('zkpProof')
+            ->get();
+
+        $tally = [];
+        foreach ($verifiedVotes as $suara) {
+            $signals = json_decode($suara->zkpProof?->public_signals, true);
+            if ($signals && isset($signals[3])) {
+                $kandidatId = $signals[3];
+                $tally[$kandidatId] = ($tally[$kandidatId] ?? 0) + 1;
+            }
+        }
+
+        // Pending votes (MASUK) tally
+        $pendingVotes = Suara::where('pemilu_id', $pemilu->id)
+            ->where('status', 'MASUK')
+            ->with('zkpProof')
+            ->get();
+
+        $pendingTally = [];
+        foreach ($pendingVotes as $suara) {
+            $signals = json_decode($suara->zkpProof?->public_signals, true);
+            if ($signals && isset($signals[3])) {
+                $kandidatId = $signals[3];
+                $pendingTally[$kandidatId] = ($pendingTally[$kandidatId] ?? 0) + 1;
+            }
+        }
+
+        // Map to candidate names
+        $tallyResults = [];
+        foreach ($pemilu->kandidats as $kandidat) {
+            $tallyResults[] = [
+                'id' => $kandidat->id,
+                'nomor_urut' => $kandidat->nomor_urut,
+                'nama_kandidat' => $kandidat->nama_kandidat,
+                'votes' => $tally[(string) $kandidat->id] ?? 0,
+                'pending' => $pendingTally[(string) $kandidat->id] ?? 0,
+            ];
+        }
+        // Sort by votes descending
+        usort($tallyResults, fn($a, $b) => $b['votes'] - $a['votes']);
+
+        $totalVerified = array_sum(array_column($tallyResults, 'votes'));
+        $totalPending = array_sum(array_column($tallyResults, 'pending'));
+
         return Inertia::render('Admin/Pemilu/Show', [
             'pemilu' => $pemilu,
             'stats' => [
@@ -50,6 +97,9 @@ class PemiluController extends Controller
                     'created_at' => $merkleTree->created_at?->toDateTimeString(),
                 ] : null,
             ],
+            'tallyResults' => $tallyResults,
+            'totalVerified' => $totalVerified,
+            'totalPending' => $totalPending,
         ]);
     }
 

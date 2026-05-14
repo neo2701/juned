@@ -24,6 +24,7 @@ use App\Http\Controllers\KandidatController;
 use App\Http\Controllers\PemilihController;
 use App\Http\Controllers\SuaraController;
 use App\Http\Controllers\VoterAuthController;
+use App\Http\Controllers\AuditController;
 
 // Voter Routes
 Route::prefix('voter')->name('voter.')->group(function () {
@@ -61,6 +62,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('pemilu.kandidat', KandidatController::class)->except(['show']);
         Route::resource('pemilih', PemilihController::class)->except(['show', 'edit', 'update']);
         Route::post('pemilu/{pemilu}/generate-tree', [MerkleTreeController::class, 'generate'])->name('pemilu.generate-tree');
+
+        // Audit & Verification Routes
+        Route::get('pemilu/{pemilu}/audit', [AuditController::class, 'index'])->name('pemilu.audit');
+        Route::post('pemilu/{pemilu}/verify/{suara}', [AuditController::class, 'verifySingle'])->name('pemilu.verify-single');
+        Route::post('pemilu/{pemilu}/verify-all', [AuditController::class, 'verifyAll'])->name('pemilu.verify-all');
+        Route::post('pemilu/{pemilu}/audit-tree', [AuditController::class, 'auditTree'])->name('pemilu.audit-tree');
     });
 });
 

@@ -118,13 +118,14 @@ class SuaraController extends Controller
 
         // Step 7: Atomic DB transaction
         try {
-            DB::transaction(function () use ($pemiluId, $encryptedVote, $proof, $nullifierHash) {
+            DB::transaction(function () use ($pemiluId, $encryptedVote, $proof, $publicSignals, $nullifierHash) {
                 $nullifier = $this->nullifierService->store($nullifierHash, $pemiluId);
 
                 $suara = Suara::create([
                     'pemilu_id' => $pemiluId,
                     'nullifier_id' => $nullifier->id,
                     'encrypted_vote' => $encryptedVote,
+                    'vote_hash' => hash('sha256', $encryptedVote . $nullifierHash . $pemiluId),
                     'waktu_suara' => now(),
                     'status' => 'MASUK',
                 ]);
@@ -132,6 +133,8 @@ class SuaraController extends Controller
                 ZkpProof::create([
                     'suara_id' => $suara->id,
                     'proof_data' => json_encode($proof),
+                    'public_signals' => json_encode($publicSignals),
+                    'proof_hash' => hash('sha256', json_encode($proof)),
                 ]);
             });
         } catch (\Exception $e) {

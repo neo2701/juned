@@ -12,6 +12,7 @@ class ZkpProof extends Model
     protected $fillable = [
         'suara_id',
         'proof_data',
+        'public_signals',
         'proof_hash',
         'status_valid',
         'verified_at',
