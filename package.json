@@ -1,0 +1,30 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "test:pbt": "vitest --run tests/pbt/"
+    },
+    "devDependencies": {
+        "@inertiajs/vue3": "^2.0.0",
+        "@tailwindcss/forms": "^0.5.3",
+        "@tailwindcss/vite": "^4.0.0",
+        "@vitejs/plugin-vue": "^6.0.0",
+        "autoprefixer": "^10.4.12",
+        "concurrently": "^9.0.1",
+        "fast-check": "^3.22.0",
+        "laravel-vite-plugin": "^3.1",
+        "postcss": "^8.4.31",
+        "tailwindcss": "^3.2.1",
+        "vite": "^8.0.0",
+        "vitest": "^3.2.1",
+        "vue": "^3.4.0"
+    },
+    "dependencies": {
+        "buffer": "^6.0.3",
+        "circomlib": "^2.0.5",
+        "circomlibjs": "^0.1.7",
+        "snarkjs": "^0.7.5"
+    }
+}

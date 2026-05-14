@@ -1,0 +1,79 @@
+<script setup>
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head, Link } from '@inertiajs/vue3';
+
+defineProps({
+    pemilihs: Object,
+});
+</script>
+
+<template>
+    <Head title="Voter Management" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Voter (Pemilih) Management</h2>
+                <Link :href="route('admin.pemilih.create')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                    + Register Voter
+                </Link>
+            </div>
+        </template>
+
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                
+                <div v-if="$page.props.flash?.success" class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Success!</strong>
+                    <span class="block sm:inline"> {{ $page.props.flash.success }}</span>
+                </div>
+
+                <div v-if="$page.props.flash?.new_private_key" class="mb-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 shadow-md" role="alert">
+                    <p class="font-bold">IMPORTANT: Securely distribute these credentials to the voter.</p>
+                    <p class="mt-2 text-lg">NIK: <span class="font-mono bg-yellow-200 px-2 py-1 rounded">{{ $page.props.flash.new_voter_nik }}</span></p>
+                    <p class="mt-1 text-lg">Private Key: <span class="font-mono bg-yellow-200 px-2 py-1 rounded">{{ $page.props.flash.new_private_key }}</span></p>
+                    <p class="mt-2 text-sm italic">This is the ONLY time the Private Key will be displayed. It is securely hashed in the database.</p>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registered At</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr v-for="pemilih in pemilihs.data" :key="pemilih.id" class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ pemilih.id }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-bold text-gray-900">{{ pemilih.nik }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ new Date(pemilih.created_at).toLocaleDateString() }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <Link :href="route('admin.pemilih.destroy', pemilih.id)" method="delete" as="button" class="text-red-600 hover:text-red-900">Revoke / Delete</Link>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="pemilihs.data.length === 0">
+                                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">No voters registered yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="mt-4 flex gap-2" v-if="pemilihs.links.length > 3">
+                                <Link v-for="link in pemilihs.links" :key="link.label" :href="link.url || '#'" v-html="link.label" class="px-3 py-1 border rounded" :class="{'bg-indigo-600 text-white': link.active, 'text-gray-500': !link.url}"></Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
