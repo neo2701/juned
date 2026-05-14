@@ -30,6 +30,8 @@ class NullifierService
         return Nullifier::create([
             'pemilu_id' => $pemiluId,
             'nullifier_hash' => $nullifierHash,
+            'is_used' => true,
+            'used_at' => now(),
         ]);
     }
 }

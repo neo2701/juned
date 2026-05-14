@@ -12,6 +12,13 @@ class ZkpProof extends Model
     protected $fillable = [
         'suara_id',
         'proof_data',
+        'proof_hash',
+        'status_valid',
+        'verified_at',
+    ];
+
+    protected $casts = [
+        'verified_at' => 'datetime',
     ];
 
     public function suara(): BelongsTo

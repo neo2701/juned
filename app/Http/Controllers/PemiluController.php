@@ -62,8 +62,11 @@ class PemiluController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'tahun' => 'nullable|integer|min:2000|max:2100',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'description' => 'nullable|string',
-            'status' => 'required|in:DRAFT,BERJALAN,SELESAI',
+            'status' => 'required|in:DRAFT,BERJALAN,SELESAI,DIPUBLIKASIKAN',
         ]);
 
         Pemilu::create($validated);
@@ -80,8 +83,11 @@ class PemiluController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'tahun' => 'nullable|integer|min:2000|max:2100',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'description' => 'nullable|string',
-            'status' => 'required|in:DRAFT,BERJALAN,SELESAI',
+            'status' => 'required|in:DRAFT,BERJALAN,SELESAI,DIPUBLIKASIKAN',
         ]);
 
         $pemilu->update($validated);

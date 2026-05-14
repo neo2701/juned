@@ -43,6 +43,7 @@ defineProps({
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registered At</th>
                                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
@@ -55,6 +56,9 @@ defineProps({
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-bold text-gray-900">{{ pemilih.nik }}</div>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-700">{{ pemilih.nama_pemilih || '-' }}</div>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ new Date(pemilih.created_at).toLocaleDateString() }}
                                         </td>
@@ -63,7 +67,7 @@ defineProps({
                                         </td>
                                     </tr>
                                     <tr v-if="pemilihs.data.length === 0">
-                                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">No voters registered yet.</td>
+                                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">No voters registered yet.</td>
                                     </tr>
                                 </tbody>
                             </table>

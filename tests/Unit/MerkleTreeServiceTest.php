@@ -39,7 +39,7 @@ class MerkleTreeServiceTest extends TestCase
 
         $this->assertInstanceOf(MerkleTree::class, $tree);
         $this->assertEquals($pemilu->id, $tree->pemilu_id);
-        $this->assertEquals('GENERATED', $tree->status);
+        $this->assertEquals('FINAL', $tree->status);
         $this->assertNotNull($tree->root_hash);
         $this->assertNotEmpty($tree->root_hash);
         $this->assertNotNull($tree->nodes_data);

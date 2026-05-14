@@ -13,6 +13,7 @@ class MerkleTree extends Model
     protected $fillable = [
         'pemilu_id',
         'root_hash',
+        'total_leaf',
         'nodes_data',
         'status',
     ];
@@ -29,5 +30,15 @@ class MerkleTree extends Model
     public function leaves(): HasMany
     {
         return $this->hasMany(MerkleLeaf::class);
+    }
+
+    public function auditVerifikasis(): HasMany
+    {
+        return $this->hasMany(AuditVerifikasi::class);
+    }
+
+    public function hasilPemilus(): HasMany
+    {
+        return $this->hasMany(HasilPemilu::class);
     }
 }

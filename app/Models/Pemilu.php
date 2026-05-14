@@ -12,8 +12,16 @@ class Pemilu extends Model
 
     protected $fillable = [
         'name',
+        'tahun',
+        'tanggal_mulai',
+        'tanggal_selesai',
         'description',
-        'status'
+        'status',
+    ];
+
+    protected $casts = [
+        'tanggal_mulai' => 'datetime',
+        'tanggal_selesai' => 'datetime',
     ];
 
     public function kandidats(): HasMany
@@ -34,5 +42,10 @@ class Pemilu extends Model
     public function nullifiers(): HasMany
     {
         return $this->hasMany(Nullifier::class);
+    }
+
+    public function hasilPemilus(): HasMany
+    {
+        return $this->hasMany(HasilPemilu::class);
     }
 }

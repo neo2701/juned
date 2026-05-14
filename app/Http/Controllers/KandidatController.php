@@ -27,11 +27,13 @@ class KandidatController extends Controller
     {
         $validated = $request->validate([
             'nomor_urut' => 'required|integer|min:1',
+            'nama_kandidat' => 'nullable|string|max:200',
             'visi_misi' => 'required|string',
+            'status_aktif' => 'boolean',
         ]);
-        
+
         $pemilu->kandidats()->create($validated);
-        
+
         return redirect()->route('admin.pemilu.kandidat.index', $pemilu)->with('success', 'Kandidat created.');
     }
 
@@ -47,18 +49,20 @@ class KandidatController extends Controller
     {
         $validated = $request->validate([
             'nomor_urut' => 'required|integer|min:1',
+            'nama_kandidat' => 'nullable|string|max:200',
             'visi_misi' => 'required|string',
+            'status_aktif' => 'boolean',
         ]);
-        
+
         $kandidat->update($validated);
-        
+
         return redirect()->route('admin.pemilu.kandidat.index', $pemilu)->with('success', 'Kandidat updated.');
     }
 
     public function destroy(Pemilu $pemilu, Kandidat $kandidat)
     {
         $kandidat->delete();
-        
+
         return redirect()->route('admin.pemilu.kandidat.index', $pemilu)->with('success', 'Kandidat deleted.');
     }
 }

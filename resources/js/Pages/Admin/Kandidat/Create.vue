@@ -12,6 +12,7 @@ const props = defineProps({
 
 const form = useForm({
     nomor_urut: '',
+    nama_kandidat: '',
     visi_misi: '',
 });
 
@@ -44,6 +45,17 @@ const submit = () => {
                                 autofocus
                             />
                             <InputError class="mt-2" :message="form.errors.nomor_urut" />
+                        </div>
+
+                        <div>
+                            <InputLabel for="nama_kandidat" value="Candidate Name (Nama Kandidat)" />
+                            <TextInput
+                                id="nama_kandidat"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="form.nama_kandidat"
+                            />
+                            <InputError class="mt-2" :message="form.errors.nama_kandidat" />
                         </div>
 
                         <div>

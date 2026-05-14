@@ -7,13 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Pemilih extends Model
 {
     protected $table = 'pemilih';
-    
+
     protected $fillable = [
         'nik',
-        'private_key_hash'
+        'nama_pemilih',
+        'private_key_hash',
+        'identitas_hash',
+        'status_audit',
     ];
 
     protected $hidden = [
-        'private_key_hash'
+        'private_key_hash',
+        'identitas_hash',
+    ];
+
+    protected $casts = [
+        'status_audit' => 'boolean',
     ];
 }

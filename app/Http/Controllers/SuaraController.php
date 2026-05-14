@@ -119,9 +119,13 @@ class SuaraController extends Controller
         // Step 7: Atomic DB transaction
         try {
             DB::transaction(function () use ($pemiluId, $encryptedVote, $proof, $nullifierHash) {
+                $nullifier = $this->nullifierService->store($nullifierHash, $pemiluId);
+
                 $suara = Suara::create([
                     'pemilu_id' => $pemiluId,
+                    'nullifier_id' => $nullifier->id,
                     'encrypted_vote' => $encryptedVote,
+                    'waktu_suara' => now(),
                     'status' => 'MASUK',
                 ]);
 
@@ -129,8 +133,6 @@ class SuaraController extends Controller
                     'suara_id' => $suara->id,
                     'proof_data' => json_encode($proof),
                 ]);
-
-                $this->nullifierService->store($nullifierHash, $pemiluId);
             });
         } catch (\Exception $e) {
             Log::error('Vote transaction failed: ' . $e->getMessage());

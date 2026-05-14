@@ -57,14 +57,15 @@ class MerkleTreeService
         }
 
         // Store in database within a transaction
-        return DB::transaction(function () use ($pemiluId, $result) {
+        return DB::transaction(function () use ($pemiluId, $result, $commitments) {
             // Create or update the merkle_tree record
             $merkleTree = MerkleTree::updateOrCreate(
                 ['pemilu_id' => $pemiluId],
                 [
                     'root_hash' => $result['root'],
+                    'total_leaf' => count($commitments),
                     'nodes_data' => $result['nodes'],
-                    'status' => 'GENERATED',
+                    'status' => 'FINAL',
                 ]
             );
 
@@ -106,7 +107,7 @@ class MerkleTreeService
     public function getProof(int $pemiluId, string $commitment): array
     {
         $merkleTree = MerkleTree::where('pemilu_id', $pemiluId)
-            ->where('status', 'GENERATED')
+            ->where('status', 'FINAL')
             ->first();
 
         if (!$merkleTree) {
@@ -160,7 +161,7 @@ class MerkleTreeService
     public function getTreeData(int $pemiluId): array
     {
         $merkleTree = MerkleTree::where('pemilu_id', $pemiluId)
-            ->where('status', 'GENERATED')
+            ->where('status', 'FINAL')
             ->first();
 
         if (!$merkleTree) {

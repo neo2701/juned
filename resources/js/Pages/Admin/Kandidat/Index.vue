@@ -33,6 +33,7 @@ defineProps({
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Number</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visi & Misi</th>
                                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
@@ -41,6 +42,9 @@ defineProps({
                                     <tr v-for="kandidat in kandidats" :key="kandidat.id" class="hover:bg-gray-50 transition-colors">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-2xl font-bold text-gray-900">#{{ kandidat.nomor_urut }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ kandidat.nama_kandidat || '-' }}</div>
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="text-sm text-gray-700 max-w-2xl whitespace-pre-line">{{ kandidat.visi_misi }}</div>
@@ -51,7 +55,7 @@ defineProps({
                                         </td>
                                     </tr>
                                     <tr v-if="kandidats.length === 0">
-                                        <td colspan="3" class="px-6 py-8 text-center text-gray-500">No candidates added yet. Add one!</td>
+                                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">No candidates added yet. Add one!</td>
                                     </tr>
                                 </tbody>
                             </table>

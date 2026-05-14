@@ -8,6 +8,7 @@ import TextInput from '@/Components/TextInput.vue';
 
 const form = useForm({
     nik: '',
+    nama_pemilih: '',
 });
 
 const submit = () => {
@@ -34,12 +35,26 @@ const submit = () => {
                                 type="text"
                                 class="mt-1 block w-full"
                                 v-model="form.nik"
+                                maxlength="16"
                                 required
                                 autofocus
                             />
-                            <p class="mt-1 text-sm text-gray-500">A secure private key will be automatically generated upon registration.</p>
+                            <p class="mt-1 text-sm text-gray-500">Must be exactly 16 characters.</p>
                             <InputError class="mt-2" :message="form.errors.nik" />
                         </div>
+
+                        <div>
+                            <InputLabel for="nama_pemilih" value="Voter Name (Nama Pemilih)" />
+                            <TextInput
+                                id="nama_pemilih"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="form.nama_pemilih"
+                            />
+                            <InputError class="mt-2" :message="form.errors.nama_pemilih" />
+                        </div>
+
+                        <p class="text-sm text-gray-500">A secure private key will be automatically generated upon registration.</p>
 
                         <div class="flex items-center gap-4">
                             <PrimaryButton :disabled="form.processing">Register & Generate Key</PrimaryButton>

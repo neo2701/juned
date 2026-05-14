@@ -25,7 +25,8 @@ class PemilihController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nik' => 'required|string|unique:pemilih,nik|max:20',
+            'nik' => 'required|string|unique:pemilih,nik|size:16',
+            'nama_pemilih' => 'nullable|string|max:150',
         ]);
 
         // Generate a SNARK-friendly keypair (BN254 field private key and Poseidon commitment)
@@ -38,6 +39,7 @@ class PemilihController extends Controller
 
         Pemilih::create([
             'nik' => $request->nik,
+            'nama_pemilih' => $request->nama_pemilih,
             'private_key_hash' => $keypair['commitment'],
         ]);
 

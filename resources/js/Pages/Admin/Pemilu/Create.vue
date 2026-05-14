@@ -8,6 +8,9 @@ import TextInput from '@/Components/TextInput.vue';
 
 const form = useForm({
     name: '',
+    tahun: new Date().getFullYear(),
+    tanggal_mulai: '',
+    tanggal_selesai: '',
     description: '',
     status: 'DRAFT',
 });
@@ -43,6 +46,42 @@ const submit = () => {
                         </div>
 
                         <div>
+                            <InputLabel for="tahun" value="Year (Tahun)" />
+                            <TextInput
+                                id="tahun"
+                                type="number"
+                                min="2000"
+                                max="2100"
+                                class="mt-1 block w-full"
+                                v-model="form.tahun"
+                            />
+                            <InputError class="mt-2" :message="form.errors.tahun" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <InputLabel for="tanggal_mulai" value="Start Date" />
+                                <TextInput
+                                    id="tanggal_mulai"
+                                    type="datetime-local"
+                                    class="mt-1 block w-full"
+                                    v-model="form.tanggal_mulai"
+                                />
+                                <InputError class="mt-2" :message="form.errors.tanggal_mulai" />
+                            </div>
+                            <div>
+                                <InputLabel for="tanggal_selesai" value="End Date" />
+                                <TextInput
+                                    id="tanggal_selesai"
+                                    type="datetime-local"
+                                    class="mt-1 block w-full"
+                                    v-model="form.tanggal_selesai"
+                                />
+                                <InputError class="mt-2" :message="form.errors.tanggal_selesai" />
+                            </div>
+                        </div>
+
+                        <div>
                             <InputLabel for="description" value="Description" />
                             <textarea
                                 id="description"
@@ -63,6 +102,7 @@ const submit = () => {
                                 <option value="DRAFT">DRAFT</option>
                                 <option value="BERJALAN">BERJALAN (Ongoing)</option>
                                 <option value="SELESAI">SELESAI (Completed)</option>
+                                <option value="DIPUBLIKASIKAN">DIPUBLIKASIKAN (Published)</option>
                             </select>
                             <InputError class="mt-2" :message="form.errors.status" />
                         </div>

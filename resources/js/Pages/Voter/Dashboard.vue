@@ -501,7 +501,7 @@ onUnmounted(() => {
 
                                 <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                     <div
-                                        v-for="kandidat in election.kandidats"
+                                        v-for="kandidat in [...election.kandidats].sort((a, b) => a.nomor_urut - b.nomor_urut)"
                                         :key="kandidat.id"
                                         class="border border-gray-200 rounded-lg p-4 flex flex-col justify-between"
                                     >
@@ -510,7 +510,7 @@ onUnmounted(() => {
                                                 <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-sm font-bold">
                                                     {{ kandidat.nomor_urut }}
                                                 </span>
-                                                <span class="text-sm font-medium text-gray-900">Candidate #{{ kandidat.nomor_urut }}</span>
+                                                <span class="text-sm font-medium text-gray-900">#{{ kandidat.nomor_urut }} - {{kandidat.nama_kandidat}}</span>
                                             </div>
                                             <p v-if="kandidat.visi_misi" class="text-xs text-gray-500 mb-3">{{ kandidat.visi_misi }}</p>
                                         </div>

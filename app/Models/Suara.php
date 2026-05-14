@@ -12,13 +12,25 @@ class Suara extends Model
 
     protected $fillable = [
         'pemilu_id',
+        'nullifier_id',
         'encrypted_vote',
+        'vote_hash',
+        'waktu_suara',
         'status',
+    ];
+
+    protected $casts = [
+        'waktu_suara' => 'datetime',
     ];
 
     public function pemilu(): BelongsTo
     {
         return $this->belongsTo(Pemilu::class);
+    }
+
+    public function nullifier(): BelongsTo
+    {
+        return $this->belongsTo(Nullifier::class);
     }
 
     public function zkpProof(): HasOne
