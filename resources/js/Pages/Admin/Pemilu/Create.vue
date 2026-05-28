@@ -25,12 +25,12 @@ const submit = () => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-white leading-tight">Create New Election</h2>
+            <h2 class="font-semibold text-xl text-juned-800 leading-tight">Create New Election</h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-6">
+                <div class="bg-white border border-juned-200 rounded-xl shadow-sm p-6">
                     <form @submit.prevent="submit" class="space-y-6 max-w-2xl">
                         <div>
                             <InputLabel for="name" value="Election Name" />
@@ -85,7 +85,7 @@ const submit = () => {
                             <InputLabel for="description" value="Description" />
                             <textarea
                                 id="description"
-                                class="mt-1 block w-full bg-gray-800/50 border-gray-600 focus:border-cyan-500 focus:ring-cyan-500/20 text-white placeholder-gray-500 rounded-xl"
+                                class="mt-1 block w-full bg-white border-juned-200 focus:border-juned-500 focus:ring-juned-500/20 text-juned-dark placeholder-juned-200 rounded-lg"
                                 v-model="form.description"
                                 rows="4"
                             ></textarea>
@@ -97,7 +97,7 @@ const submit = () => {
                             <select
                                 id="status"
                                 v-model="form.status"
-                                class="mt-1 block w-full bg-gray-800/50 border-gray-600 focus:border-cyan-500 focus:ring-cyan-500/20 text-white rounded-xl"
+                                class="mt-1 block w-full bg-white border-juned-200 focus:border-juned-500 focus:ring-juned-500/20 text-juned-dark rounded-lg"
                             >
                                 <option value="DRAFT">DRAFT</option>
                                 <option value="BERJALAN">BERJALAN (Ongoing)</option>
@@ -109,7 +109,7 @@ const submit = () => {
 
                         <div class="flex items-center gap-4">
                             <PrimaryButton :disabled="form.processing">Create Election</PrimaryButton>
-                            <Link :href="route('admin.pemilu.index')" class="text-sm text-gray-400 hover:text-gray-200">Cancel</Link>
+                            <Link :href="route('admin.pemilu.index')" class="text-sm text-juned-text hover:text-juned-800">Cancel</Link>
                         </div>
                     </form>
                 </div>

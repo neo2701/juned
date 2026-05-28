@@ -21,12 +21,12 @@ const submit = () => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-white leading-tight">Register New Voter</h2>
+            <h2 class="font-semibold text-xl text-juned-800 leading-tight">Register New Voter</h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-6">
+                <div class="bg-white border border-juned-200 rounded-xl shadow-sm p-6">
                     <form @submit.prevent="submit" class="space-y-6 max-w-2xl">
                         <div>
                             <InputLabel for="nik" value="Nomor Induk Kependudukan (NIK)" />
@@ -39,7 +39,7 @@ const submit = () => {
                                 required
                                 autofocus
                             />
-                            <p class="mt-1 text-sm text-gray-400">Must be exactly 16 characters.</p>
+                            <p class="mt-1 text-sm text-juned-text">Must be exactly 16 characters.</p>
                             <InputError class="mt-2" :message="form.errors.nik" />
                         </div>
 
@@ -54,11 +54,11 @@ const submit = () => {
                             <InputError class="mt-2" :message="form.errors.nama_pemilih" />
                         </div>
 
-                        <p class="text-sm text-gray-400">A secure private key will be automatically generated upon registration.</p>
+                        <p class="text-sm text-juned-text">A secure private key will be automatically generated upon registration.</p>
 
                         <div class="flex items-center gap-4">
                             <PrimaryButton :disabled="form.processing">Register & Generate Key</PrimaryButton>
-                            <Link :href="route('admin.pemilih.index')" class="text-sm text-gray-400 hover:text-gray-200">Cancel</Link>
+                            <Link :href="route('admin.pemilih.index')" class="text-sm text-juned-text hover:text-juned-800">Cancel</Link>
                         </div>
                     </form>
                 </div>

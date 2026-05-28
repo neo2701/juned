@@ -13,7 +13,22 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                sans: ['Hanken Grotesk', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                juned: {
+                    900: '#002113',
+                    800: '#003527',
+                    700: '#064e3b',
+                    600: '#006c49',
+                    500: '#00714d',
+                    400: '#6cf8bb',
+                    300: '#6ffbbe',
+                    200: '#bfc9c3',
+                    100: '#f3f3f4',
+                    text: '#404944',
+                    dark: '#1a1c1c',
+                },
             },
         },
     },

@@ -25,6 +25,13 @@ use App\Http\Controllers\PemilihController;
 use App\Http\Controllers\SuaraController;
 use App\Http\Controllers\VoterAuthController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\PublicAuditController;
+
+// Public Audit Routes (no authentication required)
+Route::prefix('audit')->name('public.audit.')->group(function () {
+    Route::get('/', [PublicAuditController::class, 'index'])->name('index');
+    Route::get('/{pemilu}', [PublicAuditController::class, 'show'])->name('show');
+});
 
 // Voter Routes
 Route::prefix('voter')->name('voter.')->group(function () {

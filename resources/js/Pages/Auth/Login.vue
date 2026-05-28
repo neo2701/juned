@@ -32,30 +32,29 @@ const submit = () => {
 <template>
     <Head title="Admin Login" />
 
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-[#0a0a0f] relative overflow-hidden">
-        <!-- Background effects -->
-        <div class="absolute inset-0">
-            <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px); background-size: 60px 60px;"></div>
-            <div class="absolute top-1/3 left-1/3 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl animate-pulse-glow"></div>
-            <div class="absolute bottom-1/3 right-1/3 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse-glow" style="animation-delay: 1.5s;"></div>
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-juned-100 relative overflow-hidden">
+        <!-- Background decorative -->
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-juned-400/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-juned-500/5 rounded-full blur-3xl"></div>
         </div>
 
         <!-- Card -->
-        <div class="relative z-10 w-full sm:max-w-md mt-6 px-6 py-8 bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 shadow-2xl rounded-2xl">
+        <div class="relative z-10 w-full sm:max-w-md mt-6 px-6 py-8 bg-white border border-juned-200 shadow-lg rounded-2xl">
             <!-- Header -->
             <div class="mb-8 text-center">
                 <div class="flex items-center justify-center mb-4">
-                    <div class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-xl bg-juned-400/20 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-juned-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
                         </svg>
                     </div>
                 </div>
-                <h1 class="text-2xl font-bold text-gradient">Admin Portal</h1>
-                <p class="mt-2 text-sm text-gray-500">JUNED E-Voting Management</p>
+                <h1 class="text-2xl font-bold text-juned-800">Admin Portal</h1>
+                <p class="mt-2 text-sm text-juned-text">JUNED E-Voting Management</p>
             </div>
 
-            <div v-if="status" class="mb-4 text-sm font-medium text-emerald-400 text-center">
+            <div v-if="status" class="mb-4 text-sm font-medium text-juned-500 text-center">
                 {{ status }}
             </div>
 
@@ -92,7 +91,7 @@ const submit = () => {
                 <div class="mt-4 block">
                     <label class="flex items-center">
                         <Checkbox name="remember" v-model:checked="form.remember" />
-                        <span class="ms-2 text-sm text-gray-400">Remember me</span>
+                        <span class="ms-2 text-sm text-juned-text">Remember me</span>
                     </label>
                 </div>
 
@@ -100,7 +99,7 @@ const submit = () => {
                     <Link
                         v-if="canResetPassword"
                         :href="route('password.request')"
-                        class="text-sm text-gray-500 hover:text-cyan-400 transition-colors"
+                        class="text-sm text-juned-text hover:text-juned-500 transition-colors"
                     >
                         Forgot password?
                     </Link>

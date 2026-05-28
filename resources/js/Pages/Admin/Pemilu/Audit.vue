@@ -142,11 +142,11 @@ function getStatusBadgeClass(status) {
         case 'MASUK':
             return 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-amber-500/20';
         case 'TERVERIFIKASI':
-            return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-emerald-500/20';
+            return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
         case 'DITOLAK':
-            return 'bg-rose-500/10 text-rose-400 border-rose-500/30 shadow-rose-500/20';
+            return 'bg-rose-500/10 text-red-600 border-rose-500/30 shadow-rose-500/20';
         default:
-            return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
+            return 'bg-gray-500/10 text-juned-text border-gray-500/30';
     }
 }
 
@@ -155,10 +155,10 @@ function getProofBadgeClass(status) {
         case 'VALID':
             return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
         case 'TIDAK_VALID':
-            return 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+            return 'bg-rose-500/10 text-red-600 border-rose-500/30';
         case 'BELUM_DIVERIFIKASI':
         default:
-            return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
+            return 'bg-gray-500/10 text-juned-text border-gray-500/30';
     }
 }
 </script>
@@ -170,10 +170,10 @@ function getProofBadgeClass(status) {
         <template #header>
             <div class="flex justify-between items-center">
                 <div>
-                    <h2 class="font-semibold text-xl text-white leading-tight">Audit & Verification</h2>
-                    <p class="text-sm text-gray-500 mt-1">{{ pemilu.name }}</p>
+                    <h2 class="font-semibold text-xl text-juned-800 leading-tight">Audit & Verification</h2>
+                    <p class="text-sm text-juned-text mt-1">{{ pemilu.name }}</p>
                 </div>
-                <Link :href="route('admin.pemilu.show', pemilu.id)" class="text-sm text-gray-400 hover:text-gray-200 transition-colors">
+                <Link :href="route('admin.pemilu.show', pemilu.id)" class="text-sm text-juned-text hover:text-juned-800 transition-colors">
                     ← Back to Election
                 </Link>
             </div>
@@ -184,33 +184,33 @@ function getProofBadgeClass(status) {
 
                 <!-- Stats Row -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
-                        <div class="text-sm font-medium text-gray-500">Total Votes</div>
-                        <div class="mt-1 text-3xl font-bold text-white">{{ localStats.total }}</div>
+                    <div class="bg-white border border-juned-200 rounded-2xl p-6">
+                        <div class="text-sm font-medium text-juned-text">Total Votes</div>
+                        <div class="mt-1 text-3xl font-bold text-juned-800">{{ localStats.total }}</div>
                     </div>
-                    <div class="bg-gray-900/60 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-6">
-                        <div class="text-sm font-medium text-gray-500">Verified</div>
+                    <div class="bg-white border border-emerald-500/20 rounded-2xl p-6">
+                        <div class="text-sm font-medium text-juned-text">Verified</div>
                         <div class="mt-1 text-3xl font-bold text-emerald-400">{{ localStats.verified }}</div>
                     </div>
-                    <div class="bg-gray-900/60 backdrop-blur-xl border border-rose-500/20 rounded-2xl p-6">
-                        <div class="text-sm font-medium text-gray-500">Rejected</div>
-                        <div class="mt-1 text-3xl font-bold text-rose-400">{{ localStats.rejected }}</div>
+                    <div class="bg-white border border-rose-500/20 rounded-2xl p-6">
+                        <div class="text-sm font-medium text-juned-text">Rejected</div>
+                        <div class="mt-1 text-3xl font-bold text-red-600">{{ localStats.rejected }}</div>
                     </div>
-                    <div class="bg-gray-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-6">
-                        <div class="text-sm font-medium text-gray-500">Pending</div>
+                    <div class="bg-white border border-amber-500/20 rounded-2xl p-6">
+                        <div class="text-sm font-medium text-juned-text">Pending</div>
                         <div class="mt-1 text-3xl font-bold text-amber-400">{{ localStats.pending }}</div>
                     </div>
                 </div>
 
                 <!-- Actions Section -->
-                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Actions</h3>
+                <div class="bg-white border border-juned-200 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-juned-800 mb-4">Actions</h3>
                     <div class="flex flex-wrap gap-4">
                         <!-- Verify All Button -->
                         <button
                             @click="verifyAllVotes"
                             :disabled="verifyingAll || localStats.total === 0"
-                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-600 to-violet-600 hover:from-cyan-500 hover:to-violet-500 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/20"
+                            class="inline-flex items-center px-6 py-3 bg-juned-800 hover:bg-juned-700 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <svg v-if="verifyingAll" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -226,7 +226,7 @@ function getProofBadgeClass(status) {
                         <button
                             @click="auditTree"
                             :disabled="auditingTree"
-                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <svg v-if="auditingTree" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -240,31 +240,31 @@ function getProofBadgeClass(status) {
                     </div>
 
                     <!-- Verify All Result -->
-                    <div v-if="verifyAllResult" class="mt-4 rounded-xl bg-gray-800/80 border border-gray-700/50 p-4">
-                        <h4 class="text-sm font-semibold text-white mb-2">Bulk Verification Result</h4>
+                    <div v-if="verifyAllResult" class="mt-4 rounded-xl bg-juned-100 border border-juned-200 p-4">
+                        <h4 class="text-sm font-semibold text-juned-800 mb-2">Bulk Verification Result</h4>
                         <div class="grid grid-cols-4 gap-3 text-center">
                             <div>
-                                <div class="text-lg font-bold text-white">{{ verifyAllResult.total }}</div>
-                                <div class="text-xs text-gray-500">Total</div>
+                                <div class="text-lg font-bold text-juned-800">{{ verifyAllResult.total }}</div>
+                                <div class="text-xs text-juned-text">Total</div>
                             </div>
                             <div>
                                 <div class="text-lg font-bold text-emerald-400">{{ verifyAllResult.valid }}</div>
-                                <div class="text-xs text-gray-500">Valid</div>
+                                <div class="text-xs text-juned-text">Valid</div>
                             </div>
                             <div>
-                                <div class="text-lg font-bold text-rose-400">{{ verifyAllResult.invalid }}</div>
-                                <div class="text-xs text-gray-500">Invalid</div>
+                                <div class="text-lg font-bold text-red-600">{{ verifyAllResult.invalid }}</div>
+                                <div class="text-xs text-juned-text">Invalid</div>
                             </div>
                             <div>
                                 <div class="text-lg font-bold text-amber-400">{{ verifyAllResult.errors }}</div>
-                                <div class="text-xs text-gray-500">Errors</div>
+                                <div class="text-xs text-juned-text">Errors</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Merkle Tree Audit Result -->
-                <div v-if="merkleAuditResult" class="bg-gray-900/60 backdrop-blur-xl border rounded-2xl shadow-2xl p-6"
+                <div v-if="merkleAuditResult" class="bg-white border rounded-xl shadow-sm p-6"
                     :class="merkleAuditResult.valid ? 'border-emerald-500/30' : 'border-rose-500/30'">
                     <div class="flex items-center gap-3 mb-4">
                         <!-- Checkmark or X -->
@@ -274,15 +274,15 @@ function getProofBadgeClass(status) {
                             </svg>
                         </div>
                         <div v-else class="flex items-center justify-center w-10 h-10 rounded-full bg-rose-500/10 border border-rose-500/30">
-                            <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold" :class="merkleAuditResult.valid ? 'text-emerald-400' : 'text-rose-400'">
+                            <h3 class="text-lg font-semibold" :class="merkleAuditResult.valid ? 'text-emerald-400' : 'text-red-600'">
                                 Merkle Tree {{ merkleAuditResult.valid ? 'Integrity Verified' : 'Integrity Failed' }}
                             </h3>
-                            <p class="text-sm text-gray-500">
+                            <p class="text-sm text-juned-text">
                                 {{ merkleAuditResult.valid ? 'The computed root matches the stored root.' : merkleAuditResult.error || 'Root hash mismatch detected.' }}
                             </p>
                         </div>
@@ -290,43 +290,43 @@ function getProofBadgeClass(status) {
 
                     <!-- Hash comparison -->
                     <div v-if="merkleAuditResult.stored_root || merkleAuditResult.computed_root" class="space-y-3">
-                        <div class="bg-gray-800/80 rounded-xl p-4 border border-gray-700/50 font-mono">
-                            <div class="text-xs font-medium text-gray-500 mb-1">Stored Root</div>
-                            <code class="text-xs text-cyan-400 break-all">{{ merkleAuditResult.stored_root || 'N/A' }}</code>
+                        <div class="bg-juned-100 rounded-xl p-4 border border-juned-200 font-mono">
+                            <div class="text-xs font-medium text-juned-text mb-1">Stored Root</div>
+                            <code class="text-xs text-juned-500 break-all">{{ merkleAuditResult.stored_root || 'N/A' }}</code>
                         </div>
-                        <div class="bg-gray-800/80 rounded-xl p-4 border border-gray-700/50 font-mono">
-                            <div class="text-xs font-medium text-gray-500 mb-1">Computed Root</div>
-                            <code class="text-xs break-all" :class="merkleAuditResult.valid ? 'text-emerald-400' : 'text-rose-400'">{{ merkleAuditResult.computed_root || 'N/A' }}</code>
+                        <div class="bg-juned-100 rounded-xl p-4 border border-juned-200 font-mono">
+                            <div class="text-xs font-medium text-juned-text mb-1">Computed Root</div>
+                            <code class="text-xs break-all" :class="merkleAuditResult.valid ? 'text-emerald-400' : 'text-red-600'">{{ merkleAuditResult.computed_root || 'N/A' }}</code>
                         </div>
                     </div>
                 </div>
 
                 <!-- Vote Table -->
-                <div class="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-6">
-                    <h3 class="text-lg font-semibold text-white mb-4">Vote Records</h3>
+                <div class="bg-white border border-juned-200 rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-juned-800 mb-4">Vote Records</h3>
 
                     <div v-if="votes.length > 0" class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
-                                <tr class="border-b border-gray-700/50">
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">#</th>
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Vote Hash</th>
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Nullifier</th>
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Status</th>
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Proof Status</th>
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Verified At</th>
-                                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Action</th>
+                                <tr class="border-b border-juned-200">
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">#</th>
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">Vote Hash</th>
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">Nullifier</th>
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">Status</th>
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">Proof Status</th>
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">Verified At</th>
+                                    <th class="text-left py-3 px-4 text-juned-text font-medium">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(vote, index) in votes" :key="vote.id"
-                                    class="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
-                                    <td class="py-3 px-4 text-gray-400">{{ index + 1 }}</td>
+                                    class="border-b border-juned-200 hover:bg-juned-100/50 transition-colors">
+                                    <td class="py-3 px-4 text-juned-text">{{ index + 1 }}</td>
                                     <td class="py-3 px-4">
-                                        <code class="text-xs text-cyan-400 font-mono">{{ truncateHash(vote.vote_hash) }}</code>
+                                        <code class="text-xs text-juned-500 font-mono">{{ truncateHash(vote.vote_hash) }}</code>
                                     </td>
                                     <td class="py-3 px-4">
-                                        <code class="text-xs text-violet-400 font-mono">{{ truncateHash(vote.nullifier_hash) }}</code>
+                                        <code class="text-xs text-juned-500 font-mono">{{ truncateHash(vote.nullifier_hash) }}</code>
                                     </td>
                                     <td class="py-3 px-4">
                                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border shadow-sm"
@@ -340,14 +340,14 @@ function getProofBadgeClass(status) {
                                             {{ vote.proof_status }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-4 text-xs text-gray-500">
+                                    <td class="py-3 px-4 text-xs text-juned-text">
                                         {{ vote.verified_at || '—' }}
                                     </td>
                                     <td class="py-3 px-4">
                                         <button
                                             @click="verifySingleVote(vote.id)"
                                             :disabled="verifyingSingle === vote.id"
-                                            class="inline-flex items-center px-3 py-1.5 bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 text-xs font-medium rounded-lg border border-cyan-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                            class="inline-flex items-center px-3 py-1.5 bg-cyan-600/20 hover:bg-cyan-600/30 text-juned-500 text-xs font-medium rounded-lg border border-cyan-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             <svg v-if="verifyingSingle === vote.id" class="animate-spin -ml-0.5 mr-1.5 h-3 w-3" fill="none" viewBox="0 0 24 24">
                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -362,10 +362,10 @@ function getProofBadgeClass(status) {
                     </div>
 
                     <div v-else class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="mx-auto h-12 w-12 text-juned-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <p class="mt-4 text-gray-500 text-sm">No votes have been cast in this election yet.</p>
+                        <p class="mt-4 text-juned-text text-sm">No votes have been cast in this election yet.</p>
                     </div>
                 </div>
 
