@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Pemilih;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class PemilihController extends Controller
 {
@@ -22,6 +22,9 @@ class PemilihController extends Controller
         return Inertia::render('Admin/Pemilih/Create');
     }
 
+    /**
+     * Register a single voter (pre-approve NIK for self-registration).
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -29,24 +32,79 @@ class PemilihController extends Controller
             'nama_pemilih' => 'nullable|string|max:150',
         ]);
 
-        // Generate a SNARK-friendly keypair (BN254 field private key and Poseidon commitment)
-        $output = shell_exec('node ' . base_path('scripts/generate_voter.js'));
-        $keypair = json_decode($output, true);
-
-        if (!$keypair || !isset($keypair['private_key']) || !isset($keypair['commitment'])) {
-            return back()->withErrors(['nik' => 'Failed to generate cryptographic keys. Make sure Node.js and dependencies are installed.']);
-        }
+        $token = Str::random(64);
 
         Pemilih::create([
             'nik' => $request->nik,
             'nama_pemilih' => $request->nama_pemilih,
-            'private_key_hash' => $keypair['commitment'],
+            'registration_status' => 'APPROVED',
+            'registration_token' => $token,
         ]);
 
         return redirect()->route('admin.pemilih.index')->with([
-            'success' => 'Voter registered successfully.',
-            'new_private_key' => $keypair['private_key'],
-            'new_voter_nik' => $request->nik
+            'success' => 'Voter NIK approved. They can now self-register at the registration page.',
+        ]);
+    }
+
+    /**
+     * Bulk import NIKs from CSV for pre-approval.
+     */
+    public function bulkImport(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        $file = $request->file('csv_file');
+        $content = file_get_contents($file->getRealPath());
+        $lines = array_filter(array_map('trim', explode("\n", $content)));
+
+        $imported = 0;
+        $skipped = 0;
+        $errors = [];
+
+        foreach ($lines as $index => $line) {
+            // Skip header row if it contains non-numeric data
+            if ($index === 0 && !preg_match('/^\d{16}/', $line)) {
+                continue;
+            }
+
+            // Parse CSV: expected format is "NIK,Name" or just "NIK"
+            $parts = str_getcsv($line);
+            $nik = trim($parts[0] ?? '');
+            $nama = trim($parts[1] ?? '');
+
+            // Validate NIK
+            if (strlen($nik) !== 16 || !ctype_digit($nik)) {
+                $errors[] = "Row " . ($index + 1) . ": Invalid NIK '{$nik}'";
+                $skipped++;
+                continue;
+            }
+
+            // Check if already exists
+            if (Pemilih::where('nik', $nik)->exists()) {
+                $skipped++;
+                continue;
+            }
+
+            Pemilih::create([
+                'nik' => $nik,
+                'nama_pemilih' => $nama ?: null,
+                'registration_status' => 'APPROVED',
+                'registration_token' => Str::random(64),
+            ]);
+
+            $imported++;
+        }
+
+        $message = "{$imported} voters imported successfully.";
+        if ($skipped > 0) {
+            $message .= " {$skipped} skipped (duplicate or invalid).";
+        }
+
+        return redirect()->route('admin.pemilih.index')->with([
+            'success' => $message,
+            'import_errors' => $errors,
         ]);
     }
 

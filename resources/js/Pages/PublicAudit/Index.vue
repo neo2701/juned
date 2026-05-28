@@ -22,7 +22,7 @@ function truncateHash(hash, len = 20) {
 </script>
 
 <template>
-    <Head title="Audit Publik - JUNED" />
+    <Head title="Audit Publik" />
 
     <div class="min-h-screen bg-juned-100 font-sans">
         <!-- Header -->

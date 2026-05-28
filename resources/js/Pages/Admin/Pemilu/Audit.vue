@@ -173,9 +173,19 @@ function getProofBadgeClass(status) {
                     <h2 class="font-semibold text-xl text-juned-800 leading-tight">Audit & Verification</h2>
                     <p class="text-sm text-juned-text mt-1">{{ pemilu.name }}</p>
                 </div>
-                <Link :href="route('admin.pemilu.show', pemilu.id)" class="text-sm text-juned-text hover:text-juned-800 transition-colors">
-                    ← Back to Election
-                </Link>
+                <div class="flex items-center gap-3">
+                    <a :href="route('admin.export.audit.excel', pemilu.id)" class="inline-flex items-center gap-1.5 rounded-lg border border-juned-200 bg-white px-3 py-1.5 text-xs font-medium text-juned-700 hover:bg-juned-100 transition">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        Excel
+                    </a>
+                    <a :href="route('admin.export.audit.pdf', pemilu.id)" class="inline-flex items-center gap-1.5 rounded-lg border border-juned-200 bg-white px-3 py-1.5 text-xs font-medium text-juned-700 hover:bg-juned-100 transition">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        PDF
+                    </a>
+                    <Link :href="route('admin.pemilu.show', pemilu.id)" class="text-sm text-juned-text hover:text-juned-800 transition-colors">
+                        ← Back to Election
+                    </Link>
+                </div>
             </div>
         </template>
 

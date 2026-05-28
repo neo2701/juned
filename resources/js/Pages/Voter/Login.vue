@@ -82,6 +82,13 @@ const submit = () => {
             <p class="mt-6 text-center text-xs text-juned-text">
                 Private key Anda tidak pernah meninggalkan browser.
             </p>
+
+            <!-- Registration link -->
+            <div class="mt-4 text-center">
+                <Link :href="route('voter.register')" class="text-sm text-juned-700 hover:text-juned-800 font-medium">
+                    Belum terdaftar? Registrasi di sini
+                </Link>
+            </div>
         </div>
     </div>
 </template>

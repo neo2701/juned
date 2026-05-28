@@ -20,7 +20,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="JUNED - Platform Demokrasi Digital" />
+    <Head title="Platform Demokrasi Digital" />
 
     <div class="min-h-screen bg-white font-sans">
         <!-- Header - TopNavBar -->

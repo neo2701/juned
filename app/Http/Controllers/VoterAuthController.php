@@ -23,7 +23,7 @@ class VoterAuthController extends Controller
 
         $pemilih = Pemilih::where('nik', $request->nik)->first();
 
-        if (!$pemilih) {
+        if (!$pemilih || $pemilih->registration_status !== 'REGISTERED') {
             throw ValidationException::withMessages([
                 'nik' => __('The provided credentials do not match our records.'),
             ]);
