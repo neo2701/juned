@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import PublicHeader from '@/Components/PublicHeader.vue';
 
 const props = defineProps({
     pemilu: Object,
@@ -63,22 +64,7 @@ const verificationRate = computed(() => {
 
     <div class="min-h-screen bg-juned-100 font-sans">
         <!-- Header -->
-        <header class="bg-white border-b border-juned-200 shadow-sm">
-            <div class="max-w-[1200px] mx-auto px-6 lg:px-8 flex items-center justify-between h-16">
-                <Link href="/" class="text-xl font-semibold text-juned-800" style="letter-spacing: -0.025em;">
-                    JUNED
-                </Link>
-                <nav class="flex items-center gap-6">
-                    <Link href="/" class="text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Beranda</Link>
-                    <Link :href="route('public.audit.index')" class="text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Audit Publik</Link>
-                </nav>
-                <div class="flex items-center gap-3">
-                    <Link :href="route('voter.login')" class="inline-flex items-center justify-center bg-juned-800 hover:bg-juned-700 text-white font-bold text-sm rounded-xl px-5 py-1.5 transition-all">
-                        Masuk
-                    </Link>
-                </div>
-            </div>
-        </header>
+        <PublicHeader active="audit" />
 
         <!-- Main Content -->
         <main class="max-w-[1200px] mx-auto px-6 lg:px-8 py-12">

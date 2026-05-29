@@ -14,6 +14,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/edukasi', function () {
+    return Inertia::render('Edukasi');
+})->name('edukasi');
+
 Route::get('/dashboard', function () {
     $totalPemilu = \App\Models\Pemilu::count();
     $activePemilu = \App\Models\Pemilu::where('status', 'BERJALAN')->count();
