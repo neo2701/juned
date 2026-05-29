@@ -38,6 +38,7 @@ defineProps({
                     <a href="/" class="relative h-full flex items-center px-1 text-sm font-bold text-juned-800 border-b-2 border-juned-600">Beranda</a>
                     <Link :href="route('dashboard')" class="h-full flex items-center px-1 text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Dashboard</Link>
                     <Link :href="route('voter.login')" class="h-full flex items-center px-1 text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Sistem Voting</Link>
+                    <Link :href="route('voter.register')" class="h-full flex items-center px-1 text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Registrasi</Link>
                     <Link :href="route('public.audit.index')" class="h-full flex items-center px-1 text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Audit Publik</Link>
                     <a href="#" class="h-full flex items-center px-1 text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Edukasi</a>
                     <a href="#" class="h-full flex items-center px-1 text-sm font-medium text-juned-text hover:text-juned-800 transition-colors">Komunitas</a>
@@ -48,6 +49,12 @@ defineProps({
                     <a href="#" class="text-sm font-medium text-juned-text hover:text-juned-800 transition-colors px-3 py-1 rounded">
                         Bantuan
                     </a>
+                    <Link
+                        :href="route('voter.register')"
+                        class="inline-flex items-center justify-center border border-juned-200 hover:bg-juned-100 text-juned-800 font-bold text-sm rounded-xl px-5 py-1.5 transition-all"
+                    >
+                        Daftar
+                    </Link>
                     <Link
                         :href="route('voter.login')"
                         class="inline-flex items-center justify-center bg-juned-800 hover:bg-juned-700 text-white font-bold text-sm rounded-xl px-6 py-1.5 transition-all"
@@ -91,8 +98,14 @@ defineProps({
                         <!-- CTA Buttons -->
                         <div class="flex flex-wrap gap-4">
                             <Link
-                                :href="route('voter.login')"
+                                :href="route('voter.register')"
                                 class="inline-flex items-center justify-center bg-juned-800 hover:bg-juned-700 text-white font-bold rounded-xl px-6 py-3 text-base transition-all shadow-lg shadow-juned-800/25"
+                            >
+                                Daftar Sekarang
+                            </Link>
+                            <Link
+                                :href="route('voter.login')"
+                                class="inline-flex items-center gap-2 bg-transparent hover:bg-juned-800/5 text-juned-800 font-bold rounded-xl px-6 py-3 text-base transition-all border border-juned-200"
                             >
                                 Mulai Voting
                             </Link>
@@ -356,16 +369,16 @@ defineProps({
                 </p>
                 <div class="flex flex-wrap justify-center gap-4">
                     <Link
-                        :href="route('voter.login')"
+                        :href="route('voter.register')"
                         class="inline-flex items-center justify-center bg-juned-400 hover:bg-juned-300 text-juned-900 font-bold rounded-xl px-8 py-3.5 text-lg transition-all shadow-lg"
                     >
-                        Mulai Voting Sekarang
+                        Daftar & Mulai Voting
                     </Link>
                     <Link
-                        :href="route('login')"
+                        :href="route('voter.login')"
                         class="inline-flex items-center justify-center bg-transparent hover:bg-white/10 text-white font-bold rounded-xl px-8 py-3.5 text-lg transition-all border border-white/30"
                     >
-                        Hubungi Admin
+                        Sudah Terdaftar? Masuk
                     </Link>
                 </div>
             </div>

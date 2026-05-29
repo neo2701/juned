@@ -1,7 +1,8 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { buildPoseidon } from 'circomlibjs';
+import QRCode from 'qrcode';
 import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
@@ -31,6 +32,10 @@ const submitError = ref('');
 const hasConfirmedBackup = ref(false);
 const hasCopiedKey = ref(false);
 const hasDownloaded = ref(false);
+
+// QR Code
+const qrCodeDataUrl = ref('');
+const qrCanvas = ref(null);
 
 // Poseidon instance
 let poseidonInstance = null;
@@ -120,6 +125,20 @@ async function generateKey() {
 
         generatedPrivateKey.value = privKey.toString();
         generatedCommitment.value = commitment;
+
+        // Generate QR code containing credentials as JSON
+        await nextTick();
+        const qrData = JSON.stringify({
+            type: 'juned-voter',
+            nik: nikInput.value,
+            key: privKey.toString(),
+        });
+        qrCodeDataUrl.value = await QRCode.toDataURL(qrData, {
+            width: 280,
+            margin: 2,
+            color: { dark: '#002113', light: '#ffffff' },
+            errorCorrectionLevel: 'M',
+        });
     } catch (error) {
         nikError.value = 'Gagal membuat kunci. Pastikan browser mendukung Web Crypto API.';
         step.value = 'verify';
@@ -180,6 +199,20 @@ function downloadCredential() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    hasDownloaded.value = true;
+}
+
+/**
+ * Download QR code as PNG image.
+ */
+function downloadQrCode() {
+    if (!qrCodeDataUrl.value) return;
+    const a = document.createElement('a');
+    a.href = qrCodeDataUrl.value;
+    a.download = `juned-qr-${nikInput.value}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     hasDownloaded.value = true;
 }
 
@@ -389,7 +422,7 @@ const canSubmit = computed(() => {
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
                     <button
                         @click="copyPrivateKey"
                         :class="['flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all', hasCopiedKey ? 'border-emerald-300 bg-emerald-50 text-emerald-700' : 'border-juned-200 bg-white text-juned-700 hover:bg-juned-100']"
@@ -397,7 +430,7 @@ const canSubmit = computed(() => {
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
-                        {{ hasCopiedKey ? '✓ Copied' : 'Copy Key' }}
+                        {{ hasCopiedKey ? '✓ Copied' : 'Copy' }}
                     </button>
                     <button
                         @click="downloadCredential"
@@ -406,8 +439,24 @@ const canSubmit = computed(() => {
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        {{ hasDownloaded ? '✓ Downloaded' : 'Download' }}
+                        TXT
                     </button>
+                    <button
+                        @click="downloadQrCode"
+                        :class="['flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all', 'border-juned-200 bg-white text-juned-700 hover:bg-juned-100']"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                        </svg>
+                        QR
+                    </button>
+                </div>
+
+                <!-- QR Code Display -->
+                <div v-if="qrCodeDataUrl" class="rounded-xl border border-juned-200 bg-white p-4 text-center">
+                    <p class="text-xs font-medium text-juned-700 uppercase tracking-wider mb-3">QR Code Login</p>
+                    <img :src="qrCodeDataUrl" alt="QR Code Credential" class="mx-auto rounded-lg" />
+                    <p class="mt-3 text-xs text-juned-text">Scan QR ini saat login untuk mengisi kredensial otomatis.</p>
                 </div>
 
                 <!-- Confirmation Checkbox -->
@@ -453,13 +502,29 @@ const canSubmit = computed(() => {
                 </div>
                 <h1 class="text-2xl font-bold text-juned-800">Registrasi Berhasil!</h1>
                 <p class="mt-3 text-sm text-juned-text">
-                    Akun Anda telah terdaftar. Gunakan NIK dan private key untuk login saat pemilu berlangsung.
+                    Akun Anda telah terdaftar. Gunakan QR code atau NIK + private key untuk login.
                 </p>
+
+                <!-- QR Code for login -->
+                <div v-if="qrCodeDataUrl" class="mt-6 rounded-xl border-2 border-juned-400/40 bg-juned-400/5 p-5">
+                    <img :src="qrCodeDataUrl" alt="QR Code Login" class="mx-auto rounded-lg" />
+                    <p class="mt-3 text-xs text-juned-text">Simpan QR code ini — scan saat login untuk masuk otomatis.</p>
+                    <button
+                        @click="downloadQrCode"
+                        class="mt-3 inline-flex items-center gap-2 rounded-lg border border-juned-200 bg-white px-4 py-2 text-sm font-medium text-juned-700 hover:bg-juned-100 transition"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download QR Code
+                    </button>
+                </div>
 
                 <div class="mt-6 rounded-xl bg-juned-100 border border-juned-200 p-4 text-left">
                     <p class="text-xs font-medium text-juned-700 uppercase tracking-wider mb-2">Informasi Login</p>
                     <p class="text-sm text-juned-text"><span class="font-medium text-juned-800">NIK:</span> {{ nikInput }}</p>
                     <p class="text-sm text-juned-text mt-1"><span class="font-medium text-juned-800">Private Key:</span> (yang sudah Anda simpan)</p>
+                    <p class="text-sm text-juned-text mt-1"><span class="font-medium text-juned-800">QR Code:</span> Bisa digunakan untuk login cepat</p>
                 </div>
 
                 <div class="mt-6 flex flex-col gap-3">
@@ -471,9 +536,6 @@ const canSubmit = computed(() => {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
                         Login Sekarang
-                    </Link>
-                    <Link :href="route('voter.login')" class="text-sm text-juned-text hover:text-juned-700">
-                        Kembali ke halaman login
                     </Link>
                 </div>
             </div>

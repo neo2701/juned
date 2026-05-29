@@ -3,6 +3,7 @@ import { Head, Link, usePage } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { buildPoseidon } from 'circomlibjs';
 import * as snarkjs from 'snarkjs';
+import { Html5Qrcode } from 'html5-qrcode';
 import Modal from '@/Components/Modal.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -35,6 +36,11 @@ const selectedElection = ref(null);
 const selectedKandidat = ref(null);
 const privateKeyInput = ref('');
 const privateKeyError = ref('');
+
+// QR Scanner state for voting modal
+const showVoteQrScanner = ref(false);
+const voteQrError = ref('');
+let voteQrScanner = null;
 
 // Voting process state
 const isGeneratingProof = ref(false);
@@ -112,6 +118,7 @@ function openVotingModal(election, kandidat) {
  */
 function closeVotingModal() {
     clearPrivateKey();
+    stopVoteQrScanner();
     showVotingModal.value = false;
     selectedElection.value = null;
     selectedKandidat.value = null;
@@ -125,6 +132,72 @@ function closeVotingModal() {
 function clearPrivateKey() {
     privateKeyInput.value = '';
     privateKeyError.value = '';
+}
+
+/**
+ * Start QR scanner in the voting modal.
+ */
+async function startVoteQrScanner() {
+    showVoteQrScanner.value = true;
+    voteQrError.value = '';
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    try {
+        voteQrScanner = new Html5Qrcode('vote-qr-reader');
+        await voteQrScanner.start(
+            { facingMode: 'environment' },
+            { fps: 10, qrbox: { width: 220, height: 220 } },
+            (decodedText) => {
+                try {
+                    const data = JSON.parse(decodedText);
+                    if (data.type === 'juned-voter' && data.key) {
+                        privateKeyInput.value = data.key;
+                        stopVoteQrScanner();
+                    } else {
+                        voteQrError.value = 'QR code tidak valid.';
+                    }
+                } catch {
+                    voteQrError.value = 'QR code tidak dikenali.';
+                }
+            },
+            () => {}
+        );
+    } catch {
+        try {
+            await voteQrScanner.start(
+                { facingMode: 'user' },
+                { fps: 10, qrbox: { width: 220, height: 220 } },
+                (decodedText) => {
+                    try {
+                        const data = JSON.parse(decodedText);
+                        if (data.type === 'juned-voter' && data.key) {
+                            privateKeyInput.value = data.key;
+                            stopVoteQrScanner();
+                        }
+                    } catch { /* ignore */ }
+                },
+                () => {}
+            );
+        } catch {
+            voteQrError.value = 'Tidak dapat mengakses kamera.';
+            showVoteQrScanner.value = false;
+        }
+    }
+}
+
+/**
+ * Stop QR scanner in voting modal.
+ */
+async function stopVoteQrScanner() {
+    if (voteQrScanner) {
+        try {
+            await voteQrScanner.stop();
+            voteQrScanner.clear();
+        } catch { /* ignore */ }
+        voteQrScanner = null;
+    }
+    showVoteQrScanner.value = false;
 }
 
 /**
@@ -586,15 +659,40 @@ onUnmounted(() => {
                     <!-- Private Key Input -->
                     <div class="mb-4">
                         <InputLabel for="voter-private-key" value="Private Key" />
-                        <p class="text-xs text-juned-text mt-1 mb-2">Enter your private key to generate a zero-knowledge proof. Your key will not be sent to the server.</p>
-                        <TextInput
-                            id="voter-private-key"
-                            type="password"
-                            class="mt-1 block w-full"
-                            v-model="privateKeyInput"
-                            placeholder="Enter your numeric private key"
-                            @keyup.enter="submitVote"
-                        />
+                        <p class="text-xs text-juned-text mt-1 mb-2">Enter your private key or scan QR code. Your key will not be sent to the server.</p>
+
+                        <!-- QR Scanner for voting -->
+                        <div v-if="showVoteQrScanner" class="mb-3">
+                            <div class="rounded-lg overflow-hidden border border-juned-200">
+                                <div id="vote-qr-reader" class="w-full"></div>
+                            </div>
+                            <button @click="stopVoteQrScanner" class="mt-2 text-xs text-red-600 hover:text-red-700 font-medium">
+                                Tutup Scanner
+                            </button>
+                        </div>
+                        <div v-if="voteQrError" class="mb-2 text-xs text-red-600">{{ voteQrError }}</div>
+
+                        <div class="flex gap-2">
+                            <TextInput
+                                id="voter-private-key"
+                                type="password"
+                                class="block w-full"
+                                v-model="privateKeyInput"
+                                placeholder="Enter your numeric private key"
+                                @keyup.enter="submitVote"
+                            />
+                            <button
+                                v-if="!showVoteQrScanner"
+                                @click="startVoteQrScanner"
+                                type="button"
+                                class="flex-shrink-0 inline-flex items-center justify-center rounded-lg border border-juned-200 bg-juned-100/50 px-3 hover:bg-juned-100 transition"
+                                title="Scan QR Code"
+                            >
+                                <svg class="w-5 h-5 text-juned-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                                </svg>
+                            </button>
+                        </div>
                         <InputError class="mt-2" :message="privateKeyError" />
                     </div>
 
