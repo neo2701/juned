@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pemilih;
+use App\Services\MerkleTreeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -16,6 +18,22 @@ class VoterRegistrationController extends Controller
     public function create()
     {
         return Inertia::render('Voter/Register');
+    }
+
+    /**
+     * Demo page: show pre-approved NIKs that are not registered yet.
+     */
+    public function demoPreapproved()   
+    {
+        $preapproved = Pemilih::query()
+            ->where('registration_status', 'APPROVED')
+            ->whereNull('private_key_hash')
+            ->orderBy('nik')
+            ->get(['nik', 'nama_pemilih', 'created_at']);
+
+        return Inertia::render('Voter/PreapprovedDemo', [
+            'preapprovedNik' => $preapproved,
+        ]);
     }
 
     /**
@@ -54,7 +72,7 @@ class VoterRegistrationController extends Controller
      * Complete self-registration: receive the commitment (Poseidon hash of private key)
      * generated client-side. The server never sees the private key.
      */
-    public function store(Request $request)
+    public function store(Request $request, MerkleTreeService $merkleTreeService)
     {
         $request->validate([
             'nik' => 'required|string|size:16',
@@ -79,6 +97,17 @@ class VoterRegistrationController extends Controller
             'registration_token' => null,
             'registered_at' => now(),
         ]);
+
+        try {
+            $merkleTreeService->regenerateTreesForEligibleElections();
+        } catch (\Throwable $exception) {
+            Log::error('Failed to regenerate Merkle tree after voter registration: ' . $exception->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Registrasi berhasil, tetapi pembaruan Merkle Tree gagal. Silakan coba regenerasi tree secara manual.',
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,

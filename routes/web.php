@@ -93,6 +93,7 @@ Route::prefix('voter')->name('voter.')->group(function () {
 
     // Self-Registration Routes (public, no auth required)
     Route::get('register', [VoterRegistrationController::class, 'create'])->name('register');
+    Route::get('preapproved-demo', [VoterRegistrationController::class, 'demoPreapproved'])->name('demo-preapproved');
     Route::post('register/check-nik', [VoterRegistrationController::class, 'checkNik'])->name('register.check');
     Route::post('register', [VoterRegistrationController::class, 'store'])->name('register.store');
 

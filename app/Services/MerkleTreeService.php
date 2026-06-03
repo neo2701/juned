@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\MerkleLeaf;
 use App\Models\MerkleTree;
+use App\Models\Pemilu;
 use App\Models\Pemilih;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
@@ -15,6 +16,26 @@ class MerkleTreeService
     private const MAX_LEAVES = 1024; // 2^10
 
     /**
+     * Rebuild Merkle trees for all elections that are not finished yet.
+     *
+     * This keeps generated trees in sync when a new voter completes
+     * registration and receives a commitment.
+     *
+     * @return array<int, MerkleTree>
+     */
+    public function regenerateTreesForEligibleElections(): array
+    {
+        $electionIds = Pemilu::where('status', '!=', 'SELESAI')->pluck('id');
+        $trees = [];
+
+        foreach ($electionIds as $pemiluId) {
+            $trees[] = $this->buildTree((int) $pemiluId);
+        }
+
+        return $trees;
+    }
+
+    /**
      * Build the Merkle Tree for an election.
      *
      * Collects all voter commitments, pads to 1024, delegates to Node.js for Poseidon hashing.
@@ -24,7 +45,10 @@ class MerkleTreeService
     public function buildTree(int $pemiluId): MerkleTree
     {
         // Collect all voter commitments (private_key_hash) from pemilih table
-        $commitments = Pemilih::pluck('private_key_hash')->toArray();
+        $commitments = Pemilih::whereNotNull('private_key_hash')
+            ->orderBy('id')
+            ->pluck('private_key_hash')
+            ->toArray();
 
         if (count($commitments) > self::MAX_LEAVES) {
             throw new RuntimeException(

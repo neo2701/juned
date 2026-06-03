@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, onMounted } from 'vue';
 import { buildPoseidon } from 'circomlibjs';
 import QRCode from 'qrcode';
 import TextInput from '@/Components/TextInput.vue';
@@ -39,6 +39,14 @@ const qrCanvas = ref(null);
 
 // Poseidon instance
 let poseidonInstance = null;
+
+onMounted(() => {
+    const params = new URLSearchParams(window.location.search);
+    const nik = params.get('nik');
+    if (nik && /^\d{16}$/.test(nik)) {
+        nikInput.value = nik;
+    }
+});
 
 async function getPoseidon() {
     if (!poseidonInstance) {

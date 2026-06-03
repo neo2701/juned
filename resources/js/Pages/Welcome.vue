@@ -40,12 +40,12 @@ defineProps({
                     <!-- Left Content -->
                     <div class="space-y-6">
                         <!-- ISO Badge -->
-                        <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-juned-200 rounded-full px-4 py-2 shadow-sm">
+                        <!-- <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-juned-200 rounded-full px-4 py-2 shadow-sm">
                             <svg class="w-4 h-4 text-juned-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
                             </svg>
                             <span class="text-xs font-semibold text-juned-500">Sertifikasi ISO 27001 Terverifikasi</span>
-                        </div>
+                        </div> -->
 
                         <!-- Heading -->
                         <h1 class="text-4xl lg:text-5xl font-bold text-juned-800 leading-tight">
