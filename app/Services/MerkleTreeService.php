@@ -63,7 +63,7 @@ class MerkleTreeService
         ]);
 
         // Invoke scripts/merkle_tree.js via Symfony Process
-        $process = new Process(['node', base_path('scripts/merkle_tree.js')]);
+        $process = new Process([config('app.node_path'), base_path('scripts/merkle_tree.js')]);
         $process->setInput($input);
         $process->setTimeout(30);
         $process->run();

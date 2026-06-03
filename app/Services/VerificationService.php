@@ -78,7 +78,7 @@ class VerificationService
             'vkeyPath' => $vkeyPath,
         ]);
 
-        $process = new Process(['node', base_path('scripts/verify.js')]);
+        $process = new Process([config('app.node_path'), base_path('scripts/verify.js')]);
         $process->setInput($input);
         $process->setTimeout(15);
 
@@ -206,7 +206,7 @@ class VerificationService
             'depth' => 10,
         ]);
 
-        $process = new Process(['node', base_path('scripts/merkle_tree.js')]);
+        $process = new Process([config('app.node_path'), base_path('scripts/merkle_tree.js')]);
         $process->setInput($input);
         $process->setTimeout(30);
 

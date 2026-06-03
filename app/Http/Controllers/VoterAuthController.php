@@ -31,7 +31,7 @@ class VoterAuthController extends Controller
 
         // Verify the private key using Poseidon
         $escapedKey = escapeshellarg($request->private_key);
-        $computedHash = trim(shell_exec('node ' . base_path('scripts/poseidon_hash.js') . ' ' . $escapedKey));
+        $computedHash = trim(shell_exec(config('app.node_path') . ' ' . base_path('scripts/poseidon_hash.js') . ' ' . $escapedKey));
 
         if ($computedHash !== $pemilih->private_key_hash) {
             throw ValidationException::withMessages([

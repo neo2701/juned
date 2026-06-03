@@ -74,7 +74,7 @@ class SuaraController extends Controller
             'vkeyPath' => $vkeyPath,
         ]);
 
-        $process = new Process(['node', base_path('scripts/verify.js')]);
+        $process = new Process([config('app.node_path'), base_path('scripts/verify.js')]);
         $process->setInput($input);
         $process->setTimeout(10);
 

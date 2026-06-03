@@ -23,24 +23,29 @@ return new class extends Migration {
         // In SQLite, CHECK constraints can't be altered. We'll handle this by recreating the column.
         // However, since this is complex in SQLite, we'll use DB::statement to work around it.
 
-        // For SQLite: recreate pemilu table with new status check
-        DB::statement('CREATE TABLE "pemilu_new" (
-            "id" integer primary key autoincrement not null,
-            "name" varchar not null,
-            "tahun" integer,
-            "tanggal_mulai" datetime,
-            "tanggal_selesai" datetime,
-            "description" text,
-            "status" varchar check("status" in(\'DRAFT\', \'BERJALAN\', \'SELESAI\', \'DIPUBLIKASIKAN\')) not null default \'DRAFT\',
-            "created_at" datetime,
-            "updated_at" datetime
-        )');
+        if (Schema::getConnection()->getDriverName() === 'sqlite') {
+            // For SQLite: recreate pemilu table with new status check
+            DB::statement('CREATE TABLE "pemilu_new" (
+                "id" integer primary key autoincrement not null,
+                "name" varchar not null,
+                "tahun" integer,
+                "tanggal_mulai" datetime,
+                "tanggal_selesai" datetime,
+                "description" text,
+                "status" varchar check("status" in(\'DRAFT\', \'BERJALAN\', \'SELESAI\', \'DIPUBLIKASIKAN\')) not null default \'DRAFT\',
+                "created_at" datetime,
+                "updated_at" datetime
+            )');
 
-        DB::statement('INSERT INTO "pemilu_new" (id, name, tahun, tanggal_mulai, tanggal_selesai, description, status, created_at, updated_at)
-            SELECT id, name, tahun, tanggal_mulai, tanggal_selesai, description, status, created_at, updated_at FROM "pemilu"');
+            DB::statement('INSERT INTO "pemilu_new" (id, name, tahun, tanggal_mulai, tanggal_selesai, description, status, created_at, updated_at)
+                SELECT id, name, tahun, tanggal_mulai, tanggal_selesai, description, status, created_at, updated_at FROM "pemilu"');
 
-        DB::statement('DROP TABLE "pemilu"');
-        DB::statement('ALTER TABLE "pemilu_new" RENAME TO "pemilu"');
+            DB::statement('DROP TABLE "pemilu"');
+            DB::statement('ALTER TABLE "pemilu_new" RENAME TO "pemilu"');
+        } else {
+            // For MySQL
+            DB::statement("ALTER TABLE pemilu MODIFY COLUMN status ENUM('DRAFT', 'BERJALAN', 'SELESAI', 'DIPUBLIKASIKAN') NOT NULL DEFAULT 'DRAFT'");
+        }
 
         // ─── kandidat: add nama_kandidat, status_aktif ───
         Schema::table('kandidat', function (Blueprint $table) {
@@ -209,20 +214,24 @@ return new class extends Migration {
             $table->dropColumn(['nama_kandidat', 'status_aktif']);
         });
 
-        // Revert pemilu - recreate without new columns and with old status check
-        DB::statement('CREATE TABLE "pemilu_old" (
-            "id" integer primary key autoincrement not null,
-            "name" varchar not null,
-            "description" text,
-            "status" varchar check("status" in(\'DRAFT\', \'BERJALAN\', \'SELESAI\')) not null default \'DRAFT\',
-            "created_at" datetime,
-            "updated_at" datetime
-        )');
+        if (Schema::getConnection()->getDriverName() === 'sqlite') {
+            // Revert pemilu - recreate without new columns and with old status check
+            DB::statement('CREATE TABLE "pemilu_old" (
+                "id" integer primary key autoincrement not null,
+                "name" varchar not null,
+                "description" text,
+                "status" varchar check("status" in(\'DRAFT\', \'BERJALAN\', \'SELESAI\')) not null default \'DRAFT\',
+                "created_at" datetime,
+                "updated_at" datetime
+            )');
 
-        DB::statement('INSERT INTO "pemilu_old" (id, name, description, status, created_at, updated_at)
-            SELECT id, name, description, status, created_at, updated_at FROM "pemilu"');
+            DB::statement('INSERT INTO "pemilu_old" (id, name, description, status, created_at, updated_at)
+                SELECT id, name, description, status, created_at, updated_at FROM "pemilu"');
 
-        DB::statement('DROP TABLE "pemilu"');
-        DB::statement('ALTER TABLE "pemilu_old" RENAME TO "pemilu"');
+            DB::statement('DROP TABLE "pemilu"');
+            DB::statement('ALTER TABLE "pemilu_old" RENAME TO "pemilu"');
+        } else {
+            DB::statement("ALTER TABLE pemilu MODIFY COLUMN status ENUM('DRAFT', 'BERJALAN', 'SELESAI') NOT NULL DEFAULT 'DRAFT'");
+        }
     }
 };
